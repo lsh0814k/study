@@ -48,7 +48,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        String sql = "update item set itme_name=?, price=?, quantity=? where id=?";
+        String sql = "update item set item_name=?, price=?, quantity=? where id=?";
         template.update(sql,
                 updateParam.getItemName(),
                 updateParam.getPrice(),
@@ -69,7 +69,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     @Override
     public List<Item> findAll(ItemSearchCond cond) {
-        String sql = "selet id, item_name, price, quantity from item";
+        String sql = "select id, item_name, price, quantity from item";
 
         // 동적 쿼리
         if (StringUtils.hasText(cond.getItemName()) || cond.getMaxPrice() != null) {
@@ -79,7 +79,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         List<Object> param = new ArrayList<>();
         boolean endFlag = false;
         if (StringUtils.hasText(cond.getItemName())) {
-            sql += " iem_name like concat('%',?'%')";
+            sql += " item_name like concat('%',?,'%')";
             param.add(cond.getItemName());
             endFlag = true;
         }
@@ -95,10 +95,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
         log.info("sql={}", sql);
 
-        template.query(sql, itemRowMapper(), param.toArray());
-
-
-        return null;
+        return template.query(sql, itemRowMapper(), param.toArray());
     }
 
     private RowMapper<Item> itemRowMapper() {
