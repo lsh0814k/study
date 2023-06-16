@@ -58,7 +58,7 @@ public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        String sql = "update item set itme_name=:itemName, price=:price, quantity=:quantity where id=:id";
+        String sql = "update item set item_name=:itemName, price=:price, quantity=:quantity where id=:id";
 
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("itemName", updateParam.getItemName())
@@ -94,7 +94,7 @@ public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
 
         boolean endFlag = false;
         if (StringUtils.hasText(itemName)) {
-            sql += " iem_name like concat('%',:itemName'%')";
+            sql += " item_name like concat('%',:itemName,'%')";
             endFlag = true;
         }
 
@@ -103,15 +103,12 @@ public class JdbcTemplateItemRepositoryV2 implements ItemRepository {
                 sql +=" and";
             }
 
-            sql += " price <= :maxPice";
+            sql += " price <= :maxPrice";
         }
 
         log.info("sql={}", sql);
 
-        template.query(sql, param, itemRowMapper());
-
-
-        return null;
+        return template.query(sql, param, itemRowMapper());
     }
 
     private RowMapper<Item> itemRowMapper() {
