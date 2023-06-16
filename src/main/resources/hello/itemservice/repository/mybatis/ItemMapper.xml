@@ -12,7 +12,7 @@
         update item
         set
             item_name = #{updateParam.itemName},
-            price = #{updateParam.price}
+            price = #{updateParam.price},
             quantity = #{updateParam.quantity}
         where id = #{id}
     </update>
@@ -25,7 +25,7 @@
 
     <select id="findAll" resultType="Item">
         select id, item_name, price, quantity
-        form item
+        from item
         <where>
             <if test = "itemName != null and itemName != ''">
                 and item_name like concat('%', #{itemName}, '%')
